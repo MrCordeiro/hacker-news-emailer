@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "hacker-news-emailer"
+version = "0.1.0"
+description = "A HackerNews headlines emailer"
+authors = ["Fernando Cordeiro <fernando_cordeiro@live.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+requests = "^2.26.0"
+beautifulsoup4 = "^4.10.0"
+python-dotenv = "^0.19.0"
+
+[tool.poetry.dev-dependencies]
+poetry = "^1.1.10"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
