@@ -10,11 +10,11 @@ import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-logger = logging.getLogger("hacker-news-email")
-
-
-load_dotenv() 
+load_dotenv()
+is_debug = os.getenv("DEBUG")
+log_level = logging.INFO if is_debug else logging.INFO
+logging.basicConfig(stream=sys.stdout, level=log_level)
+logger = logging.getLogger(__name__)
 
 
 now = datetime.datetime.now()
@@ -22,7 +22,7 @@ now = datetime.datetime.now()
 
 def extract_news(url):
     """Extract stories from Hacker News"""
-    
+
     cnt = ""
     cnt += "<b>HN Top Stories:</b>\n" + "<br>" + "-" * 50 + "<br>"
     response = requests.get(url)
@@ -52,7 +52,9 @@ def send_email(content):
 
     # Create a text/plain message
     msg = MIMEMultipart()
-    msg["Subject"] = f"Top News Stories HN [Automated Email]"{str(now.day)}-{str(now.month)}-{str(now.year)}""
+    msg[
+        "Subject"
+    ] = f"Top News Stories HN [Automated Email]{str(now.day)}-{str(now.month)}-{str(now.year)}"
     msg["From"] = FROM
     msg["To"] = TO
     msg.attach(MIMEText(content, "html"))
@@ -60,7 +62,8 @@ def send_email(content):
     logger.info("Initiating Server...")
 
     server = smtplib.SMTP(SERVER, PORT)
-    server.set_debuglevel(1)
+    if is_debug:
+        server.set_debuglevel(1)
     server.ehlo()
     server.starttls()
     server.login(FROM, PASS)
